@@ -1,6 +1,10 @@
 @main
 struct AutoMountPolicyTests {
     static func main() {
+        var fast = AutoMountPolicy()
+        fast.updateConnection(1, now: 0)
+        assert(!fast.claimAttempt(enabled: true, idle: true, now: 0.34))
+        assert(fast.claimAttempt(enabled: true, idle: true, now: 0.35))
         var policy = AutoMountPolicy(settleDelay: 2)
         assert(!policy.claimAttempt(enabled: true, idle: true, now: 10))
         policy.updateConnection(1, now: 10)

@@ -48,7 +48,7 @@ typedef struct {
   LIBMTP_raw_device_t rawdevice;
 } km_ptp_usb_mirror;
 #define KINDLE_VID 0x1949
-#define COLORSOFT1_PID 0x9981
+#define KINDLE_MTP_PID 0x9981
 #define KP_RESET_FLAG ((uint32_t)0x10000000) /* DEVICE_FLAG_FORCE_RESET_ON_CLOSE */
 #define ROOT LIBMTP_FILES_AND_FOLDERS_ROOT
 
@@ -64,7 +64,7 @@ static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER; /* libmtp is not thread-
 
 static int no_reset_on_close(LIBMTP_mtpdevice_t *d) {
   km_ptp_usb_mirror *u = (km_ptp_usb_mirror *)d->usbinfo;
-  if (u->rawdevice.device_entry.vendor_id != KINDLE_VID || u->rawdevice.device_entry.product_id != COLORSOFT1_PID) {
+  if (u->rawdevice.device_entry.vendor_id != KINDLE_VID || u->rawdevice.device_entry.product_id != KINDLE_MTP_PID) {
     fprintf(stderr, "layout check failed, not touching device\n"); return -1; }
   u->rawdevice.device_entry.device_flags &= ~KP_RESET_FLAG;
   return (u->rawdevice.device_entry.device_flags & KP_RESET_FLAG) ? -1 : 0;
@@ -590,8 +590,8 @@ int main(int argc, char **argv) {
   LIBMTP_raw_device_t *raw = NULL; int nraw = 0;
   if (LIBMTP_Detect_Raw_Devices(&raw, &nraw) != LIBMTP_ERROR_NONE || nraw < 1) { fprintf(stderr, "no Kindle found (plugged in and unlocked?)\n"); return 3; }
   int k = -1;
-  for (int i = 0; i < nraw; i++) if (raw[i].device_entry.vendor_id == KINDLE_VID && raw[i].device_entry.product_id == COLORSOFT1_PID) { k = i; break; }
-  if (k < 0) { fprintf(stderr, "no Kindle Colorsoft (1949:9981) found\n"); return 3; }
+  for (int i = 0; i < nraw; i++) if (raw[i].device_entry.vendor_id == KINDLE_VID && raw[i].device_entry.product_id == KINDLE_MTP_PID) { k = i; break; }
+  if (k < 0) { fprintf(stderr, "no supported Kindle (1949:9981) found\n"); return 3; }
   if (k) raw[0] = raw[k];
   raw[0].device_entry.device_flags &= ~KP_RESET_FLAG;
   dev = LIBMTP_Open_Raw_Device_Uncached(&raw[0]);

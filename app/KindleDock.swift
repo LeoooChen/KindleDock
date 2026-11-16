@@ -16,7 +16,10 @@ func redact(_ s: String) -> String {
     s.replacingOccurrences(of: "G[0-9A-Z]{3,}", with: "GR…(redacted)", options: .regularExpression)
 }
 
+private let logLock = NSLock()
+
 func appendLog(_ s: String) {
+    logLock.lock(); defer { logLock.unlock() }
     let line = redact(s.hasSuffix("\n") ? s : s + "\n")
     let df = ISO8601DateFormatter(); df.timeZone = .current
     let stamped = line.split(separator: "\n", omittingEmptySubsequences: false)
@@ -216,7 +219,10 @@ final class Model: ObservableObject {
             guard !d.isEmpty else { h.readabilityHandler = nil; return }
             let s = redact(String(decoding: d, as: UTF8.self))
             appendLog(s)
-            Task { @MainActor in self.helperOutput += s }
+            Task { @MainActor in
+                guard self.helper === p else { return }
+                self.helperOutput += s
+            }
         }
         p.terminationHandler = { proc in
             let code = proc.terminationStatus
@@ -283,7 +289,7 @@ final class Model: ObservableObject {
                       message: "Turn it on once in \(settingsPath) (switch on), then Mount again. Don't enable kernel extensions in Recovery Mode; that isn't needed.")
         } else if out.contains("probably busy") || out.contains("LIBUSB_ERROR_BUSY") || out.contains("LIBUSB_ERROR_ACCESS") {
             setStatus("Kindle is busy", message: "Another app is using the Kindle. Quit Calibre, kpush, Android File Transfer or OpenMTP, then try again.")
-        } else if out.contains("no Kindle") {
+        } else if out.contains("no Kindle") || out.contains("no supported Kindle") {
             setStatus("No Kindle found", message: "Plug in the Kindle and unlock it.")
         } else {
             let tail = out.split(separator: "\n").suffix(3).joined(separator: "\n")
