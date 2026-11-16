@@ -1,0 +1,10 @@
+#!/bin/bash
+set -euo pipefail
+# Launch as the logged-in user, never as the Installer's root account.
+CONSOLE_USER="$(stat -f %Su /dev/console)"
+if [[ "$CONSOLE_USER" != root && "$CONSOLE_USER" != loginwindow ]]; then
+  CONSOLE_UID="$(id -u "$CONSOLE_USER")"
+  launchctl asuser "$CONSOLE_UID" sudo -H -u "$CONSOLE_USER" open -g -a /Applications/KindleDock.app || true
+fi
+# Extension approval stays with the user. No TCC, Recovery, spctl or USB changes.
+exit 0

@@ -1,208 +1,165 @@
-# kindle-mtp-mount
+<div align="center">
 
-[![Latest release](https://img.shields.io/github/v/release/voantony/kindle-mtp-mount)](https://github.com/voantony/kindle-mtp-mount/releases/latest)
-[![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+# KindleDock
 
-Mount a Kindle (MTP) on macOS as a read-write removable drive in Finder: a menu-bar app (`.dmg`) and a CLI.
+**让 Kindle 回到 Finder。插线，自动出现。**
 
-Shows a Kindle that's plugged into a Mac by USB as a removable drive called
-**Kindle** in Finder, listed under **Locations** with an eject button, like a
-USB stick. You can browse it, copy books off it, and drag files onto it.
+[![Build](https://github.com/LeoooChen/KindleDock/actions/workflows/build.yml/badge.svg)](https://github.com/LeoooChen/KindleDock/actions/workflows/build.yml)
+[![Release](https://img.shields.io/github/v/release/LeoooChen/KindleDock?color=3d9b87)](https://github.com/LeoooChen/KindleDock/releases/latest)
+![macOS](https://img.shields.io/badge/macOS-15.4%2B-153846?logo=apple&logoColor=white)
+![Apple Silicon](https://img.shields.io/badge/Apple_Silicon-arm64-c5a66f)
+[![MIT](https://img.shields.io/badge/license-MIT-708b99)](LICENSE)
 
-<p align="center"><img src="docs/images/finder-kindle.png" width="380" alt="A Kindle Colorsoft's files in a Finder window titled Kindle"></p>
-<p align="center"><sub>A Kindle Colorsoft open in Finder.</sub></p>
+[**下载安装包 ↓**](https://github.com/LeoooChen/KindleDock/releases/latest/download/KindleDock-arm64.pkg) · [English](README.en.md) · [快速开始](#快速开始) · [常见问题](#常见问题) · [构建与贡献](docs/BUILDING.md)
 
-## Install
+<img src="docs/assets/hero.svg" alt="KindleDock 将 Kindle 挂载到 Finder 的界面示意" width="100%">
 
-- **App (easiest):** download **[Mount-Kindle-0.1.1.dmg](https://github.com/voantony/kindle-mtp-mount/releases/download/v0.1.1/Mount-Kindle-0.1.1.dmg)**
-  from the [latest release](https://github.com/voantony/kindle-mtp-mount/releases/latest),
-  drag **Mount Kindle** to Applications, and open it (right-click → **Open**
-  the first time; see [First launch](#mac-app)). You also need
-  [macFUSE](https://macfuse.github.io/) 5.x with its file system extension
-  turned on; see [Setup](#setup).
-- **With your AI agent:** give it this repo's link
-  (`https://github.com/voantony/kindle-mtp-mount`). [AGENTS.md](AGENTS.md)
-  tells it what to run and which steps you have to do yourself, and
-  [install.sh](install.sh) does the rest.
-- **Manually (command line):** install [macFUSE](https://macfuse.github.io/)
-  5.x and [Homebrew](https://brew.sh), then run `./install.sh` in a copy of
-  this repo. After that, complete the one-time step in [Setup](#setup).
+<sub>原生菜单栏应用 · USB 本地传输 · 无需账号 · 无需 Homebrew</sub>
 
-Newer Kindles (for example the Kindle Colorsoft) connect over MTP, the same
-phone-style protocol Android uses. macOS doesn't show MTP devices in Finder.
-This small program bridges the gap. It talks MTP with
-[libmtp](https://github.com/libmtp/libmtp) and presents the files to macOS
-through [macFUSE](https://macfuse.github.io/).
+</div>
 
-**Read-write by default.** Copying, renaming, creating folders and deleting
-all work. Use `kindle-mount --ro` or the app's **Read-only** switch to only
-browse.
-**Deletes are immediate and permanent.** There's no Trash on the Kindle, so
-anything you delete there is gone.
+---
 
-Tested on 30 October 2026 with a Kindle Colorsoft (1st gen, USB ID `1949:9981`),
-macOS 27.2, macFUSE 5.5 (FSKit backend) and libmtp 1.1.23:
+新款 Kindle 使用 MTP，macOS 的 Finder 无法直接打开它。**KindleDock 把支持的 Kindle 挂载为 Finder 侧栏里的可读写磁盘**，可以直接浏览文件夹、拖入电子书、复制文件和推出设备。
 
-- Read-only mount (`--ro`): browsing the root and about 890 entries in
-  `documents`, reading files with `cat` and `cp`, and copying books off (a
-  7.3 MB book matched `kpush pull` byte for byte by MD5). `touch` and `mkdir`
-  were refused with "Read-only file system".
-- Read-write mount, in a scratch folder only: creating a folder, writing a file
-  and reading it back, overwriting it, renaming it, creating a subfolder and a
-  file inside it, deleting the files and both folders. `.DS_Store` never
-  reached the Kindle.
-- The drive showed up at `/Volumes/Kindle`. After unmounting, the Kindle was
-  free for other MTP tools right away, with no replug.
-- 31 October 2026, version 0.1.1: mounted as a local volume, macOS reports it
-  as local, removable and ejectable (like a mounted disk image), so Finder
-  lists it under Locations. Ejecting it the way Finder does unmounted it and
-  released the Kindle. Read-write still worked in a scratch folder, and an
-  idle read-write mount wrote nothing to the Kindle.
+本项目基于 [Antony Vo 的 kindle-mtp-mount](https://github.com/voantony/kindle-mtp-mount)，补上了自动挂载、重连处理、登录启动和完整安装包。
 
-## Requirements
+## 为什么用 KindleDock
 
-- macOS 15.4 or later, on Apple silicon
-- [macFUSE](https://macfuse.github.io/) 5.x, with its file system extension
-  turned on (see Setup)
-- libmtp 1.1.23 from Homebrew: `brew install libmtp` (not needed for the app,
-  which bundles it)
+| 连接即挂载 | 拔插后仍然可靠 | 日常操作留在 Finder |
+| :--- | :--- | :--- |
+| 原生 USB 事件通知，不需要每次点 Mount | 清理旧虚拟盘，再为新连接创建新会话 | 支持浏览、复制、重命名、建文件夹和推出 |
+| **不是只显示一个空磁盘** | **空闲时保持安静** | **安装包带齐依赖** |
+| 挂载后验证 `documents` 可读，才报告成功 | 原生状态检查，15 秒兜底，不反复抢占设备 | `.pkg` 内含应用、MTP/USB 库和所需 macFUSE 组件 |
 
-## Setup
+- **手动推出会被尊重**：推出后保持断开，下一次拔插才自动挂载。
+- **只读模式**：只想复制书出来时，可切换为只读。
+- **登录时启动**：可在菜单栏开关，不需要手写启动脚本。
+- **离线工作**：传输不经服务器，不需要亚马逊账号，不收集遥测。
 
-After installing macFUSE, turn on its file system extension once:
+## 快速开始
 
-**System Settings → General → Login Items & Extensions → File System
-Extensions → macFUSE** (switch it on).
+### 1. 安装
 
-Until you do, mounting fails with "File system extension not enabled".
+下载并打开 [**KindleDock-arm64.pkg**](https://github.com/LeoooChen/KindleDock/releases/latest/download/KindleDock-arm64.pkg)，按安装器提示完成安装。应用随后出现在菜单栏。
 
-**Don't enable kernel extensions in Recovery Mode.** That step is only needed
-for macFUSE's older kernel-extension backend. This tool uses the FSKit
-backend, which needs no kernel extension and no security changes to your Mac.
+安装器会安装所需运行环境；**已有 macFUSE 5.5 或更新版本时会保留它**。不会升级 Mounty/NTFS-3G，也不会修改它们的挂载脚本。
 
-## Build and install
+> [!IMPORTANT]
+> 免费构建版本目前**没有 Apple Developer ID 签名或公证**。如果 macOS 拦截安装，请先核对项目来源和 Release 校验值，再按系统提示到“隐私与安全性”中确认打开此安装包。不会自动关闭 Gatekeeper。
+
+### 2. 完成一次性系统授权
+
+首次使用如提示 macFUSE 未启用，打开：
+
+**系统设置 → 通用 → 登录项与扩展 → 文件系统扩展 → 启用 macFUSE**
+
+此授权需要你亲自完成。使用的是 FSKit 后端，**无需进入恢复模式、降低安全性或开启内核扩展**。
+
+### 3. 插线，打开 Finder
+
+连接并解锁支持的 Kindle，等待几秒，在 **Finder → 位置 → Kindle** 中打开。把兼容格式的书复制到 `documents` 文件夹即可。
+
+完成后在 Finder 中推出。需要继续插线充电并阅读时，再点 Kindle 屏幕上的 **Disconnect／断开连接**。
+
+## 支持范围
+
+| 项目 | 当前范围 |
+| :--- | :--- |
+| Mac | **Apple Silicon**，macOS **15.4+** |
+| Paperwhite 12 / KPW6 | 已在真实设备上验证目录、中文文件名读写、重命名、删除及拔插重连 |
+| Colorsoft 第 1 代 | 沿用上游相同 USB 标识的协议支持；上游有实测记录 |
+| USB 标识 | 当前只接受 `1949:9981`，**不是通用 MTP 驱动** |
+| 旧款磁盘模式 Kindle | 通常可由 Finder 直接打开，不需要本工具 |
+
+当前首次发行只提供 arm64 安装包。其他型号、Intel Mac 和其他 USB 标识尚未承诺支持。
+
+## 下载选哪个
+
+| 文件 | 用途 |
+| :--- | :--- |
+| **`KindleDock-arm64.pkg`** | 推荐。应用与依赖一起安装，下载链接保持不变 |
+| `KindleDock-<版本>-arm64.dmg` | 磁盘映像，内含同一安装器和快速说明 |
+| `KindleDock-<版本>-arm64.zip` | 仅应用；适合已安装 macFUSE 5.5+ 的用户 |
+| `SHA256SUMS.txt` | Release 附带的下载校验值 |
+
+[查看全部发行文件 →](https://github.com/LeoooChen/KindleDock/releases/latest)
+
+## 菜单栏里有什么
+
+| 选项 | 作用 |
+| :--- | :--- |
+| Mount / Unmount | 手动挂载或安全卸载 |
+| Open in Finder | 打开 Kindle 存储空间 |
+| Read-only | 拒绝设备上的写入和删除 |
+| Auto-mount on connection | 连接时自动挂载；每次连接只尝试一次 |
+| Launch at login | 登录后启动；开发目录中的构建不会创建登录项 |
+| Show logs / Help & setup | 查看日志或安装说明 |
+
+## 识别为什么更快
+
+KindleDock 使用 **IOKit 插拔事件**，不再等待一秒轮询；设备稳定等待从原型的两秒缩短为 **350 毫秒**。挂载状态通过系统接口读取，不再启动 `mount` shell 进程。
+
+整体耗时还取决于 Kindle 固件、USB 和 macFUSE 的挂载过程，**350 毫秒不是“挂载完成时间”**。应用会记录每次真正验证存储完成的耗时。测试方法和边界见 [性能说明](docs/PERFORMANCE.md)。
+
+## 常见问题
+
+<details>
+<summary><strong>Finder 有 Kindle，但里面是空的？</strong></summary>
+
+KindleDock 会按 USB 连接身份清理旧挂载，并在新挂载后验证 `documents`。若显示 Storage unavailable，请退出其他 MTP 软件后重新连接，或手动选 Mount。报告问题时附上 macOS、Kindle 型号、固件版本和脱敏日志；不要上传电子书或个人信息。
+
+</details>
+
+<details>
+<summary><strong>连接后没有出现设备？</strong></summary>
+
+确认数据线支持传输、Kindle 已解锁、型号在支持范围内，并已授权 macFUSE 文件系统扩展。退出 Calibre、OpenMTP、旧的 Mount Kindle 或其他占用设备的软件，再手动点 Mount。KindleDock 不会反复抢占或重置 USB。
+
+</details>
+
+<details>
+<summary><strong>Finder 已推出，Kindle 仍显示“已连接计算机”？</strong></summary>
+
+Finder 推出的是 Mac 上的虚拟磁盘，不是切换 Kindle 固件模式。在 Kindle 屏幕点 Disconnect／断开连接，或拔掉线即可。[亚马逊官方说明](https://digprjsurvey.amazon.com/csad/help/node/TCUBEdEkbIhK07ysFu)。
+
+</details>
+
+<details>
+<summary><strong>会影响 NTFS、Mounty 或其他使用 macFUSE 的软件吗？</strong></summary>
+
+它们可能共用 macFUSE。安装器保留已安装的 5.5+；若现有版本更旧，会升级共享运行环境。它不修改 NTFS 驱动或配置，但无法替所有第三方软件保证兼容性，重要 NTFS 工作流应在升级后实际验证。卸载 KindleDock 时不要顺手删除共用的 macFUSE。
+
+</details>
+
+<details>
+<summary><strong>能直接阅读 EPUB，或者转换/解密书籍吗？</strong></summary>
+
+KindleDock 只负责传文件，不转换格式、不处理 DRM。请使用设备支持的文件格式和你有权使用的内容。
+
+</details>
+
+> [!CAUTION]
+> Kindle 上的删除操作**不经过 Mac 废纸篓**。大文件写入需要足够的 Mac 临时空间。正常使用请先推出再拔线。
+
+## 构建、发布与贡献
 
 ```sh
-./install.sh    # checks requirements, builds, tests, installs to ~/.local/bin
-                # (safe to re-run; ./install.sh --prefix DIR for another folder)
-
-# or by hand:
-make            # builds ./kindle-mtpfs
-make test       # optional: unit tests against a fake in-memory device
-make install    # copies kindle-mtpfs, kindle-mount, kindle-unmount to ~/.local/bin
-                # (change with: make install PREFIX=/some/dir)
+scripts/test.sh
+app/build-app.sh
+scripts/build-package.sh
 ```
 
-## Use
+构建环境、完整测试、签名方式和 Release 流程见 [BUILDING.md](docs/BUILDING.md)。GitHub Actions 会在提交和 PR 时构建，推送与 `VERSION` 一致的 `v*` 标签时自动发布安装包。
 
-1. **Quit Calibre first** (and Android File Transfer, OpenMTP, or anything else
-   that talks to the Kindle). Only one program can hold the Kindle at a time.
-2. Plug in the Kindle and unlock it.
-3. Run:
+欢迎提交可复现的设备兼容性反馈。改动前请阅读 [贡献说明](CONTRIBUTING.md) 与 [更新记录](CHANGELOG.md)。
 
-```sh
-kindle-mount           # read-write
-kindle-mount --ro      # read-only: every change is refused
-kindle-unmount         # unmount and give the Kindle back to Calibre etc.
-```
+## 致谢与许可
 
-The drive appears at `/Volumes/Kindle` and in Finder's sidebar under
-**Locations** with an eject button, like a USB stick. Ejecting it there
-unmounts it and releases the Kindle. It's mounted as a "local" macFUSE volume
-for this; macFUSE calls that option experimental, so `kindle-mount --no-local`
-mounts it the old way (reachable at `/Volumes/Kindle`, but not listed in
-Locations). Spotlight doesn't index it, and macOS's `.Trashes`, `.fseventsd`
-and `._*` files are refused, so nothing extra gets written to the Kindle. Logs go to `~/Library/Logs/kindle-mount.log`.
+- [Antony Vo / kindle-mtp-mount](https://github.com/voantony/kindle-mtp-mount)：原始文件系统、MTP 实现与菜单栏应用。保留原始提交历史和 MIT 版权。
+- [macFUSE](https://macfuse.github.io/)：通过 FSKit 提供 Finder 文件系统。
+- [libmtp](https://github.com/libmtp/libmtp) 与 [libusb](https://github.com/libusb/libusb)：USB/MTP 通信。
 
-If the Kindle is busy, `kindle-mount` says so and stops. It never retries in a
-loop and never resets the USB connection.
+KindleDock 自有代码使用 [MIT](LICENSE) 许可。libmtp/libusb 使用 LGPL；**macFUSE 使用单独许可，商业软件捆绑分发有额外限制**，详见 [第三方说明](app/THIRD-PARTY-NOTICES.txt) 和 [macFUSE 许可](packaging/MACFUSE-LICENSE.txt)。
 
-## Mac app
-
-`Mount Kindle.app` puts a book icon in the menu bar with **Mount**,
-**Unmount**, **Open in Finder**, a **Read-only** switch and **Quit**.
-
-<p align="center"><img src="docs/images/menu-illustration.png" width="440" alt="Illustration of the Mount Kindle menu: Mounted at /Volumes/Kindle, Mount, Unmount, Open in Finder, Read-only, Quit"></p>
-<p align="center"><sub>Illustration of the menu while mounted, drawn from the app's menu items (not a screenshot).</sub></p>
-
-Download it from the [latest release](https://github.com/voantony/kindle-mtp-mount/releases/latest)
-(`.dmg` or `.zip`), or build it yourself (below). It runs
-the same `kindle-mtpfs` helper, bundled inside the app together with libmtp
-and libusb, so Homebrew isn't needed on a Mac that only runs the app. macFUSE
-still has to be installed and its file system extension turned on (see Setup).
-
-If something is in the way, the menu says so and tells you what to do:
-macFUSE missing, file system extension off (with the exact System Settings
-path), Calibre running, no Kindle plugged in, or the Kindle busy in another
-app. Quitting the app unmounts the Kindle first. Its log is at
-`~/Library/Logs/MountKindle.log`, with the serial masked.
-
-Scripts and AI agents can drive it with `open mountkindle://mount`,
-`open mountkindle://unmount` and `open mountkindle://quit`.
-
-Build it:
-
-```sh
-app/build-app.sh     # writes dist/Mount Kindle.app, dist/Mount-Kindle-<version>.zip and .dmg
-```
-
-**First launch (Gatekeeper).** The app is signed ad hoc, not by an Apple
-Developer ID, so if you downloaded it macOS will block it the first time.
-Either right-click the app and choose **Open**, then confirm, or go to
-**System Settings > Privacy & Security** and click **Open Anyway** after the
-first try. You only have to do this once. An app you built yourself isn't
-quarantined, so it opens normally. Third-party license texts are inside the
-app in `Contents/Resources/Licenses`.
-
-## How it works
-
-- Folder listings are read lazily and cached for 5 seconds.
-- Small files are downloaded to a temp file the first time they're read. For
-  big files (over 2 MB), the first couple of reads use MTP partial reads, so
-  Finder previews don't pull the whole book. A full download happens only if a
-  program keeps reading.
-- New and changed files are uploaded when the file is closed, and the size on
-  the Kindle is checked against the local copy. Replacing an existing file
-  uploads `name.kmtmp` first, checks it, then deletes the old file and renames
-  the new one into place, so a failed upload never loses the old copy.
-- macOS clutter (`.DS_Store`, `._*` AppleDouble files, `.Trashes`,
-  `.fseventsd`, `.Spotlight-V100`, …) is kept in memory only and never written
-  to the Kindle. Extended attributes are accepted and dropped.
-- The Kindle serial number is masked in everything the tool prints.
-- On unmount, the Kindle is released without a USB reset.
-
-## Limitations
-
-- Only the Kindle Colorsoft (1st gen) USB ID is accepted. The code also relies
-  on libmtp 1.1.23 internals to stop libmtp resetting USB on close, and checks
-  that version at startup.
-- Moving a file between folders uses MTP MoveObject. If the Kindle refuses
-  that, the move fails with "cross-device link". Copy and delete instead.
-- Timestamps and permissions can't be changed (MTP doesn't store them). Such
-  requests succeed but do nothing.
-- Files written from the Mac are held in a temp file until closed, so a very
-  large copy needs that much free space on the Mac.
-- Names typed in Finder with accents are stored in macOS's decomposed Unicode
-  form.
-- One request at a time. MTP is slow, so big copies take a while.
-
-## Support
-
-If this saves you time and you'd like to say thanks, tips are welcome. Always optional.
-
-**Venmo:** [@Antony-Vo](https://venmo.com/u/Antony-Vo) (US)
-
-**Crypto:**
-
-| Coin | Address |
-| --- | --- |
-| Bitcoin (BTC) | `bc1pug8q2ceda7f3p30ezptg2mnz4khg9d5v9fd6p454qqs20zdyzw8qnuf8cx` |
-| Ethereum (ETH, and tokens on EVM chains) | `0xf9439c4330427E45017A3c4454137474DEbB3E36` |
-| Monero (XMR) | `84iCefzmu82Ha9eHPyRpsKPLcuEkBxBRxZm1FSx72T5S1CULgQkabtf9K8Lwxf6NFaLvUoJPqAqvL1EgaSvR7rMbJhKupfr` |
-
-Please double-check the address before you send. Crypto transfers can't be reversed.
-
-## License
-
-MIT. See [LICENSE](LICENSE). This project links dynamically against libmtp
-(LGPL-2.1) and macFUSE's libfuse. No code from other MTP filesystems was used.
+<sub>本项目非 Amazon 官方产品，与 Amazon 无隶属关系。封面为界面示意，不是实机截图。</sub>

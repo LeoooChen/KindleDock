@@ -2,20 +2,38 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-  <key>CFBundleName</key><string>Mount Kindle</string>
-  <key>CFBundleDisplayName</key><string>Mount Kindle</string>
-  <key>CFBundleIdentifier</key><string>io.github.voantony.mountkindle</string>
-  <key>CFBundleExecutable</key><string>MountKindle</string>
-  <key>CFBundlePackageType</key><string>APPL</string>
-  <key>CFBundleShortVersionString</key><string>0.1.1</string>
-  <key>CFBundleVersion</key><string>2</string>
-  <key>LSMinimumSystemVersion</key><string>15.4</string>
-  <key>LSUIElement</key><true/>
-  <key>NSHumanReadableCopyright</key><string>MIT License. Bundles libmtp and libusb (LGPL-2.1).</string>
-  <key>CFBundleURLTypes</key>
-  <array><dict>
-    <key>CFBundleURLName</key><string>io.github.voantony.mountkindle</string>
-    <key>CFBundleURLSchemes</key><array><string>mountkindle</string></array>
-  </dict></array>
+	<key>CFBundleDisplayName</key>
+	<string>KindleDock</string>
+	<key>CFBundleExecutable</key>
+	<string>KindleDock</string>
+	<key>CFBundleIconFile</key>
+	<string>AppIcon</string>
+	<key>CFBundleIdentifier</key>
+	<string>io.github.leooochen.kindledock</string>
+	<key>CFBundleName</key>
+	<string>KindleDock</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.2.0</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>io.github.leooochen.kindledock</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>kindledock</string>
+			</array>
+		</dict>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>15.4</string>
+	<key>LSUIElement</key>
+	<true/>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright 2026 Antony Vo and Leo. MIT. See bundled third-party notices.</string>
 </dict>
 </plist>

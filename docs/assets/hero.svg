@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="620" viewBox="0 0 1400 620" role="img" aria-label="KindleDock: a Kindle connected to a Finder window">
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#102b38"/><stop offset="1" stop-color="#07151f"/></linearGradient><linearGradient id="panel" x2="0" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#f1f3f3"/></linearGradient><filter id="shadow" x="-30%" y="-30%" width="180%" height="190%"><feDropShadow dx="0" dy="18" stdDeviation="20" flood-opacity=".25"/></filter></defs>
+<rect width="1400" height="620" rx="28" fill="url(#bg)"/>
+<circle cx="1180" cy="60" r="300" fill="#54bca9" opacity=".045"/><circle cx="80" cy="600" r="300" fill="#d6b578" opacity=".055"/>
+<text x="84" y="108" fill="#70d0be" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="17" letter-spacing="4">A QUIETER WAY TO TRANSFER</text>
+<text x="80" y="190" fill="#f6f2e8" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="70" font-weight="700" letter-spacing="-2">KindleDock</text>
+<text x="85" y="238" fill="#afc3cc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="24">Your Kindle. Right in Finder.</text>
+<g transform="translate(83 295)" filter="url(#shadow)"><rect width="204" height="245" rx="22" fill="#23323b" stroke="#50616a"/><rect x="14" y="15" width="176" height="199" rx="10" fill="#e9e3d2"/><path d="M53 68h100M53 85h100M53 102h75" stroke="#7c8179" stroke-width="5" stroke-linecap="round"/><rect x="49" y="145" width="107" height="33" rx="8" fill="#d6cfbc"/><text x="102" y="167" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#56605c">CONNECTED</text><rect x="88" y="227" width="28" height="5" rx="2" fill="#7c8b92"/></g>
+<path d="M288 418h66c42 0 43-51 84-51h52" fill="none" stroke="#60cdb5" stroke-width="5" stroke-linecap="round"/>
+<circle cx="389" cy="399" r="19" fill="#102b38"/><path d="m380 399 6 6 12-13" fill="none" stroke="#60cdb5" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+<g transform="translate(505 105)" filter="url(#shadow)"><rect width="805" height="421" rx="17" fill="url(#panel)"/><path d="M17 0h771q17 0 17 17v43H0V17Q0 0 17 0" fill="#e5e8e8"/>
+<circle cx="25" cy="29" r="6" fill="#ee7a70"/><circle cx="46" cy="29" r="6" fill="#e9c165"/><circle cx="67" cy="29" r="6" fill="#80be8d"/>
+<text x="400" y="35" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="16" font-weight="600" fill="#43525a">Kindle</text>
+<path d="M0 60h194v361H17q-17 0-17-17" fill="#e3e9e9"/>
+<g font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="14" fill="#58676e"><text x="24" y="99" font-size="11" font-weight="600" fill="#7d8c93">FAVORITES</text><text x="36" y="130">AirDrop</text><text x="36" y="165">Applications</text><text x="36" y="200">Downloads</text><text x="24" y="247" font-size="11" font-weight="600" fill="#7d8c93">LOCATIONS</text></g>
+<rect x="13" y="261" width="168" height="35" rx="7" fill="#bcd9d5"/>
+<rect x="28" y="271" width="13" height="16" rx="2" fill="#537e7d"/><text x="53" y="284" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="14" font-weight="600" fill="#244a4a">Kindle</text><path d="m158 274 6 7h-12zM153 285h10" fill="#527270" stroke="#527270" stroke-width="2"/>
+<g fill="#73b9d7"><path d="M252 113h39l13 12h58v62H252z"/><path d="M420 113h39l13 12h58v62H420z"/><path d="M588 113h39l13 12h58v62H588z"/></g>
+<g fill="#91cee7"><path d="M247 134h121l-8 57H255z"/><path d="M415 134h121l-8 57H423z"/><path d="M583 134h121l-8 57H591z"/></g>
+<g font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="14" text-anchor="middle" fill="#46545c"><text x="308" y="221">documents</text><text x="476" y="221">fonts</text><text x="644" y="221">audible</text></g>
+<rect x="244" y="286" width="495" height="70" rx="11" fill="#e7f3ef"/><circle cx="274" cy="320" r="10" fill="#4aa58b"/><path d="m269 320 4 4 7-9" fill="none" stroke="#fff" stroke-width="2"/>
+<text x="296" y="316" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="14" font-weight="600" fill="#34745f">Mounted. Storage verified.</text><text x="296" y="338" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12" fill="#668e80">Connect · Copy · Eject</text>
+</g>
+<text x="1310" y="575" text-anchor="end" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12" fill="#829ba7">Interface illustration · Apple Silicon / macOS 15.4+</text>
+</svg>

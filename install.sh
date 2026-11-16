@@ -56,7 +56,7 @@ if [ ! -d /Library/Filesystems/macfuse.fs ] || [ ! -f /usr/local/include/fuse3/f
   cat >&2 <<MSG
 
 macFUSE isn't installed (or its libfuse3 headers are missing).
-Download macFUSE 5.x from https://macfuse.github.io/ and run its installer.
+Download macFUSE 5.5 or later from https://macfuse.github.io/ and run its installer.
 That's a manual step for you: macOS asks for your password and approval.
 Then run ./install.sh again.
 MSG
@@ -64,6 +64,10 @@ MSG
 fi
 FVER="$(defaults read /Library/Filesystems/macfuse.fs/Contents/Info CFBundleShortVersionString 2>/dev/null || echo unknown)"
 case "$FVER" in 5.*|6.*|unknown) ;; *) die "macFUSE $FVER found; version 5 or later is needed for the FSKit backend. Update from https://macfuse.github.io/";; esac
+FMAJ="${FVER%%.*}"; FREST="${FVER#*.}"; FMIN="${FREST%%.*}"
+if [ "$FMAJ" -lt 5 ] || { [ "$FMAJ" -eq 5 ] && [ "$FMIN" -lt 5 ]; }; then
+  die "macFUSE $FVER is too old. KindleDock needs 5.5+ for reliable FSKit Finder integration."
+fi
 ok "macFUSE $FVER"
 
 step "Building"

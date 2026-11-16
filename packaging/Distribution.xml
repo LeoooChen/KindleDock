@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="2">
+  <title>KindleDock</title>
+  <welcome file="Welcome.html" mime-type="text/html"/>
+  <license file="License.html" mime-type="text/html"/>
+  <conclusion file="Conclusion.html" mime-type="text/html"/>
+  <options customize="never" require-scripts="true" hostArchitectures="arm64" rootVolumeOnly="true"/>
+  <domains enable_anywhere="false" enable_currentUserHome="false" enable_localSystem="true"/>
+  <installation-check script="checkSystem()"/>
+  <script><![CDATA[
+    function checkSystem() {
+      if (system.compareVersions(system.version.ProductVersion, '15.4') < 0) {
+        my.result.title = 'macOS 15.4 or later is required';
+        my.result.message = 'KindleDock uses the FSKit backend on Apple Silicon Macs.';
+        return false;
+      }
+      return true;
+    }
+    function needsMacFUSE() {
+      var info = system.files.plistAtPath('/Library/Filesystems/macfuse.fs/Contents/Info.plist');
+      return !info || !info.CFBundleShortVersionString ||
+        system.compareVersions(info.CFBundleShortVersionString, '5.5.0') < 0;
+    }
+  ]]></script>
+  <choices-outline>
+    <line choice="macfuse"/>
+    <line choice="kindledock"/>
+  </choices-outline>
+  <choice id="macfuse" title="macFUSE runtime" visible="false" selected="needsMacFUSE()">
+    <pkg-ref id="io.macfuse.installer.components.core"/>
+  </choice>
+  <choice id="kindledock" title="KindleDock" visible="false" selected="true">
+    <pkg-ref id="io.github.leooochen.kindledock.app"/>
+  </choice>
+  <pkg-ref id="io.macfuse.installer.components.core" version="5.5.0" auth="root" onConclusion="none">macFUSE-Core.pkg</pkg-ref>
+  <pkg-ref id="io.github.leooochen.kindledock.app" version="@VERSION@" auth="root" onConclusion="none">KindleDock-App.pkg</pkg-ref>
+</installer-gui-script>

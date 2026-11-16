@@ -1,27 +1,29 @@
-Mount Kindle: third-party software
-==================================
+KindleDock — third-party software
+================================
 
-Mount Kindle itself (the app and the kindle-mtpfs helper) is MIT licensed.
-See LICENSE-kindle-mtp-mount.txt. Source: https://github.com/voantony/kindle-mtp-mount
+KindleDock and kindle-mtpfs are MIT licensed. The original filesystem and app
+were written by Antony Vo (https://github.com/voantony/kindle-mtp-mount).
+KindleDock additions are by Leo / LeoooChen and contributors.
+See LICENSE-KindleDock.txt. Original copyright and git history are retained.
 
-The app bundles two libraries, unmodified, as separate dynamic libraries in
-Contents/Frameworks. Both are licensed under the GNU Lesser General Public
-License, version 2.1 (COPYING-libmtp.txt, COPYING-libusb.txt). The exact
-versions are in versions.txt.
+The application bundles libmtp 1.1.23 and libusb as separate dynamic libraries
+under LGPL-2.1-or-later. The code is not modified; install names are adjusted to
+@rpath for relocation. Exact versions and license texts are alongside this file.
+Source and corresponding Homebrew build recipes:
+  https://github.com/libmtp/libmtp/tree/v1.1.23
+  https://github.com/libusb/libusb
+  https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/lib/libmtp.rb
+  https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/lib/libusb.rb
+Users may replace the dylibs with ABI-compatible builds and re-sign the app.
 
-  libmtp   Copyright (C) 2005-2013 Linus Walleij, Richard A. Low and others
-           Source: https://github.com/libmtp/libmtp
-           Release used: https://github.com/libmtp/libmtp/releases/tag/v1.1.23
+The installer optionally installs the original macFUSE 5.5.0 core payload,
+whose official download SHA-256 and product signature are checked at build time.
+The macFUSE code and payload are not modified. Existing macFUSE >=5.5 is kept.
+macFUSE is NOT covered by KindleDock's MIT license. Its separate license is in
+MACFUSE-LICENSE.txt and at https://macfuse.github.io/. It restricts redistribution
+bundled with commercial software without the author's prior written permission.
+KindleDock is distributed free of charge. A commercial redistributor must obtain
+any macFUSE permissions required for their own bundle.
 
-  libusb   Copyright (C) the libusb authors
-           Source: https://github.com/libusb/libusb
-           Releases: https://github.com/libusb/libusb/releases
-
-The binaries are Homebrew builds of those releases. Their install names were
-changed to @rpath so they load from inside the app; their code wasn't changed.
-To use a different build, replace the .dylib files in Contents/Frameworks with
-compatible builds (same file names) and re-sign the app ad hoc:
-    codesign --force --deep --sign - "Mount Kindle.app"
-
-macFUSE (https://macfuse.github.io/) is not bundled. Install it separately.
-Its libfuse3 is loaded from /usr/local/lib.
+macFUSE is loaded from /usr/local/lib; it is not copied into the app bundle.
+No macFUSE source code has been incorporated into KindleDock.

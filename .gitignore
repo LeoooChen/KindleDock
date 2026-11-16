@@ -2,4 +2,9 @@ kindle-mtpfs
 *.o
 .DS_Store
 test/test_ops
+.build/
 dist/
+*.p12
+*.p8
+.env
+*.dSYM/

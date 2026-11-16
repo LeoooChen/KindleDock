@@ -1,0 +1,19 @@
+KindleDock · Quick start / 快速开始
+
+1. Open "Install KindleDock.pkg". It installs the app and required runtime.
+   打开安装包，按提示安装。无需安装 Homebrew。
+2. If macOS blocks this unsigned installer, review its source/checksum, then
+   open System Settings > Privacy & Security > Open Anyway for this installer.
+   免费构建版本未经过 Apple Developer ID 签名/公证，首次可能需要安全确认。
+3. Enable macFUSE in System Settings > General > Login Items & Extensions >
+   File System Extensions, if prompted. This one-time approval is manual.
+   如提示，请手动启用 macFUSE 文件系统扩展。无需进入恢复模式降低安全性。
+4. Connect and unlock the supported Kindle. Finder > Locations > Kindle.
+   连接并解锁 Kindle，稍等几秒，在 Finder 的“位置”里打开 Kindle。
+
+Only one MTP app can use the Kindle. Quit Calibre/OpenMTP/old Mount Kindle.
+Copy compatible books to documents. Eject in Finder when finished.
+To read while keeping the cable connected, tap Disconnect on the Kindle.
+Deletes on the Kindle are permanent; they do not go to the Mac's Trash.
+
+https://github.com/LeoooChen/KindleDock
