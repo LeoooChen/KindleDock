@@ -27,3 +27,11 @@ A cold app launch can include startup work before USB notification registration.
 ## Local measurement — 2026-11-16
 
 Paperwhite 12 / KPW6, Apple Silicon Mac, macOS 15.6, macFUSE 5.5.0, direct USB connection. On a cold KindleDock launch with the Kindle already connected, the app reported **3,036 ms** from its initial USB detection to verified storage, including **2,637 ms** for the helper and filesystem. This is one observation, not an average or a controlled speedup comparison against physical replug measurements.
+
+## Physical replug — 2026-11-16, released v0.2.0
+
+The user confirmed automatic replug and visible folders, with approximately **5 seconds from insertion to Finder appearance**. Logs showed an initial USB arrival followed by a transient disappearance, then a stable registry identity roughly two seconds later (application timestamps have one-second resolution).
+
+From the final stable identity to verified storage, KindleDock measured **3,468 ms**. The helper/filesystem portion was **3,060 ms**, leaving **408 ms** for settling and application scheduling. macFUSE's system log put virtual-device activation to filesystem-channel establishment at about **2,783 ms** inside that helper/filesystem portion.
+
+These nested timings are not additive: the macFUSE interval is part of the 3,060 ms helper interval. The earlier cold-launch figure did not include physical USB enumeration. Lowering the 350 ms settling delay alone cannot remove seconds from the full insertion-to-Finder path; its stability benefit must be revalidated before changing it. Further large improvements need measurement of the macFUSE local-volume path rather than claims based only on app startup.
